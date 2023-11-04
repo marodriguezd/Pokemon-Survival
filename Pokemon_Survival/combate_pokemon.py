@@ -180,7 +180,35 @@ def cure_pokemon(player_profile, player_pokemon):
 
 
 def capture_with_pokeball(player_profile, enemy_pokemon):
-    pass
+    base_probability = 0.10
+    final_probability = 0
+
+    if enemy_pokemon["current_health"] > 90:
+        final_probability = base_probability * 1
+    if enemy_pokemon["current_health"] > 80:
+        final_probability = base_probability * 2
+    if enemy_pokemon["current_health"] > 70:
+        final_probability = base_probability * 3
+    if enemy_pokemon["current_health"] > 60:
+        final_probability = base_probability * 4
+    if enemy_pokemon["current_health"] > 50:
+        final_probability = base_probability * 5
+    if enemy_pokemon["current_health"] > 40:
+        final_probability = base_probability * 6
+    if enemy_pokemon["current_health"] > 30:
+        final_probability = base_probability * 7
+    if enemy_pokemon["current_health"] > 20:
+        final_probability = base_probability * 8
+    if enemy_pokemon["current_health"] > 10:
+        final_probability = base_probability * 9
+
+    capture_rate = random.random()
+
+    if capture_rate <= final_probability:
+        player_profile["pokemon_inventory"].append(enemy_pokemon)
+        print("¡Lo has capturado!")
+    else:
+        print("¡La captura falló!")
 
 
 def fight(player_profile, enemy_pokemon):
