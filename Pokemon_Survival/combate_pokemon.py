@@ -3,9 +3,16 @@ from pokeload import get_all_pokemons
 
 
 def get_player_profile(pokemon_list):
+    # Selecciona Pokémon únicos aleatoriamente para el inventario
+    pokemon_inventory = []
+    while len(pokemon_inventory) < 3:
+        random_pokemon = random.choice(pokemon_list)
+        if random_pokemon not in pokemon_inventory:
+            pokemon_inventory.append(random_pokemon)
+
     return {
         "player_name": input("¿Cuál es tu nombre?: "),
-        "pokemon_inventory": [random.choice(pokemon_list) for _ in range(3)],
+        "pokemon_inventory": pokemon_inventory,
         "combats": 0,
         "pokeballs": 0,
         "health_potion": 0
@@ -213,7 +220,7 @@ def fight(player_profile, enemy_pokemon):
             player_pokemon["current_health"] = 0  # Para que la salud del Pokémon muerto sea 0 sí o sí
             player_pokemon = choose_pokemon(player_profile)
 
-    if enemy_pokemon["current_health"] > 0:
+    if player_pokemon["current_health"] > 0:
         print("¡Has ganado!")
         assign_experience(attack_history)
         item_lottery(player_profile)
