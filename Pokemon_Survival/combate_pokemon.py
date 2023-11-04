@@ -176,39 +176,49 @@ def assign_experience(attack_history):
 
 
 def cure_pokemon(player_profile, player_pokemon):
-    pass
+    if player_profile["health_potion"] > 0:
+        player_pokemon["current_health"] += 50
+        if player_pokemon["current_health"] > 100:
+            player_pokemon["current_health"] = 100
+        player_profile["health_potion"] -= 1
+        print(f"Salud de {player_pokemon['name']} restaurada hasta {player_pokemon['current_health']}")
+    else:
+        print(f"¡No tienes pociones para curar a {player_pokemon['name']}!")
 
 
 def capture_with_pokeball(player_profile, enemy_pokemon):
-    base_probability = 0.10
-    final_probability = 0
+    if player_profile["pokeballs"] > 0:
+        base_probability = 0.10
+        final_probability = 0
 
-    if enemy_pokemon["current_health"] > 90:
-        final_probability = base_probability * 1
-    if enemy_pokemon["current_health"] > 80:
-        final_probability = base_probability * 2
-    if enemy_pokemon["current_health"] > 70:
-        final_probability = base_probability * 3
-    if enemy_pokemon["current_health"] > 60:
-        final_probability = base_probability * 4
-    if enemy_pokemon["current_health"] > 50:
-        final_probability = base_probability * 5
-    if enemy_pokemon["current_health"] > 40:
-        final_probability = base_probability * 6
-    if enemy_pokemon["current_health"] > 30:
-        final_probability = base_probability * 7
-    if enemy_pokemon["current_health"] > 20:
-        final_probability = base_probability * 8
-    if enemy_pokemon["current_health"] > 10:
-        final_probability = base_probability * 9
+        if enemy_pokemon["current_health"] > 90:
+            final_probability = base_probability * 1
+        if enemy_pokemon["current_health"] > 80:
+            final_probability = base_probability * 2
+        if enemy_pokemon["current_health"] > 70:
+            final_probability = base_probability * 3
+        if enemy_pokemon["current_health"] > 60:
+            final_probability = base_probability * 4
+        if enemy_pokemon["current_health"] > 50:
+            final_probability = base_probability * 5
+        if enemy_pokemon["current_health"] > 40:
+            final_probability = base_probability * 6
+        if enemy_pokemon["current_health"] > 30:
+            final_probability = base_probability * 7
+        if enemy_pokemon["current_health"] > 20:
+            final_probability = base_probability * 8
+        if enemy_pokemon["current_health"] > 10:
+            final_probability = base_probability * 9
 
-    capture_rate = random.random()
+        capture_rate = random.random()
 
-    if capture_rate <= final_probability:
-        player_profile["pokemon_inventory"].append(enemy_pokemon)
-        print("¡Lo has capturado!")
+        if capture_rate <= final_probability:
+            player_profile["pokemon_inventory"].append(enemy_pokemon)
+            print("¡Lo has capturado!")
+        else:
+            print("¡La captura falló!")
     else:
-        print("¡La captura falló!")
+        print(f"¡No tienes Pokeballs para capturar a {enemy_pokemon['name']}!")
 
 
 def fight(player_profile, enemy_pokemon):
