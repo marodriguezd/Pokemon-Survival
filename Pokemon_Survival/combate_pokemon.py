@@ -5,7 +5,7 @@ from pokeload import get_all_pokemons
 def get_player_profile(pokemon_list):
     return {
         "player_name": input("¿Cuál es tu nombre?: "),
-        "pokemon_inventory": [random.choice(pokemon_list) for a in range(3)],
+        "pokemon_inventory": [random.choice(pokemon_list) for _ in range(3)],
         "combats": 0,
         "pokeballs": 0,
         "health_potion": 0
@@ -148,10 +148,10 @@ def player_attack(player_pokemon, enemy_pokemon):
 def enemy_attack(player_pokemon, enemy_pokemon):
     enemy_attacks = pokemon_attacks_in_its_level(enemy_pokemon["attacks"], player_pokemon["level"])
 
-    enemy_attack = enemy_attacks[random.randint(0, len(enemy_attacks)-1)]
+    enemy_attack_selection = enemy_attacks[random.randint(0, len(enemy_attacks) - 1)]
 
-    enemy_damage_with_type_percentage_applied = int(enemy_attack['damage'].replace("--", "0")) * \
-                                               multiplier_type_calculator(player_pokemon, enemy_pokemon)
+    enemy_damage_with_type_percentage_applied = int(enemy_attack_selection['damage'].replace("--", "0")) * \
+                                                multiplier_type_calculator(player_pokemon, enemy_pokemon)
 
     player_pokemon["current_health"] -= enemy_damage_with_type_percentage_applied
 
@@ -216,6 +216,7 @@ def fight(player_profile, enemy_pokemon):
     if enemy_pokemon["current_health"] > 0:
         print("¡Has ganado!")
         assign_experience(attack_history)
+        item_lottery(player_profile)
 
     print("--- FIN DEL COMBATE ---")
     input("\nPresiona ENTER para continuar...")
@@ -223,7 +224,14 @@ def fight(player_profile, enemy_pokemon):
 
 def item_lottery(player_profile):
     """Según un factor aleatorio, al jugador le puede tocar una pokeball o una cura"""
-    pass
+    PROBABILITY = 0.25  # 25% de probabilidad
+    lottery = random.random()  # Random entre 0 y 1
+
+    if lottery <= PROBABILITY:
+        if random.randint(0, 1) == 0:
+            player_profile["pokeballs"] += 1
+        else:
+            player_profile["health_potion"] += 1
 
 
 def main():
