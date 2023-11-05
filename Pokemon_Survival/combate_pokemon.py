@@ -153,14 +153,15 @@ def player_attack(player_pokemon, enemy_pokemon):
 
 
 def enemy_attack(player_pokemon, enemy_pokemon):
-    enemy_attacks = pokemon_attacks_in_its_level(enemy_pokemon["attacks"], player_pokemon["level"])
+    if enemy_pokemon["current_heatlh"] > 0:
+        enemy_attacks = pokemon_attacks_in_its_level(enemy_pokemon["attacks"], player_pokemon["level"])
 
-    enemy_attack_selection = enemy_attacks[random.randint(0, len(enemy_attacks) - 1)]
+        enemy_attack_selection = enemy_attacks[random.randint(0, len(enemy_attacks) - 1)]
 
-    enemy_damage_with_type_percentage_applied = int(enemy_attack_selection['damage'].replace("--", "0")) * \
-                                                multiplier_type_calculator(player_pokemon, enemy_pokemon)
+        enemy_damage_with_type_percentage_applied = int(enemy_attack_selection['damage'].replace("--", "0")) * \
+                                                    multiplier_type_calculator(player_pokemon, enemy_pokemon)
 
-    player_pokemon["current_health"] -= enemy_damage_with_type_percentage_applied
+        player_pokemon["current_health"] -= enemy_damage_with_type_percentage_applied
 
 
 def assign_experience(attack_history):
