@@ -27,6 +27,10 @@ def get_pokemon_info(pokemon):
     return f"{pokemon['name']} | lvl {pokemon['level']} | hp {pokemon['current_health']}/{pokemon['base_health']}"
 
 
+def get_inventory_info(player):
+    return f"Pokeballs: {player['pokeballs']} | Pociones de Vida: {player['health_potion']}"
+
+
 def choose_pokemon(player_profile):
     while True:
         print("\nElige con qué pokémon lucharás")
@@ -153,7 +157,7 @@ def player_attack(player_pokemon, enemy_pokemon):
 
 
 def enemy_attack(player_pokemon, enemy_pokemon):
-    if enemy_pokemon["current_heatlh"] > 0:
+    if enemy_pokemon["current_health"] > 0:
         enemy_attacks = pokemon_attacks_in_its_level(enemy_pokemon["attacks"], player_pokemon["level"])
 
         enemy_attack_selection = enemy_attacks[random.randint(0, len(enemy_attacks) - 1)]
@@ -236,6 +240,7 @@ def fight(player_profile, enemy_pokemon):
     while any_player_pokemon_lives(player_profile) and enemy_pokemon["current_health"] > 0 and not its_captured:
         action = "mondongo"
         print(f"\nContrincantes: {get_pokemon_info(player_pokemon)} VS {get_pokemon_info(enemy_pokemon)}")
+        print(f"\nInventario: {get_inventory_info(player_profile)}")
         while action.upper() not in ["A", "P", "V", "C"]:
             action = input("¿Qué desea hacer?: "
                            "[A]tacar, "
@@ -266,7 +271,6 @@ def fight(player_profile, enemy_pokemon):
     if player_pokemon["current_health"] > 0:
         print("¡Has ganado!")
         assign_experience(attack_history)
-        item_lottery(player_profile)
 
     print("--- FIN DEL COMBATE ---")
     input("\nPresiona ENTER para continuar...")
@@ -280,8 +284,10 @@ def item_lottery(player_profile):
     if lottery <= PROBABILITY:
         if random.randint(0, 1) == 0:
             player_profile["pokeballs"] += 1
+            print("¡Has obtenido 1 Pokeball!")
         else:
             player_profile["health_potion"] += 1
+            print("¡Has obtenido 1 Poción de Vida!")
 
 
 def main():
