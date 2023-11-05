@@ -216,10 +216,13 @@ def capture_with_pokeball(player_profile, enemy_pokemon):
         if capture_rate <= final_probability:
             player_profile["pokemon_inventory"].append(enemy_pokemon)
             print("¡Lo has capturado!")
+            return True
         else:
             print("¡La captura falló!")
+            return False
     else:
         print(f"¡No tienes Pokeballs para capturar a {enemy_pokemon['name']}!")
+        return False
 
 
 def fight(player_profile, enemy_pokemon):
@@ -229,7 +232,8 @@ def fight(player_profile, enemy_pokemon):
     player_pokemon = choose_pokemon(player_profile)
     # print(f"\nContrincantes: {get_pokemon_info(player_pokemon)} VS {get_pokemon_info(enemy_pokemon)}")
 
-    while any_player_pokemon_lives(player_profile) and enemy_pokemon["current_health"] > 0:
+    its_captured = False
+    while any_player_pokemon_lives(player_profile) and enemy_pokemon["current_health"] > 0 and not its_captured:
         action = "mondongo"
         print(f"\nContrincantes: {get_pokemon_info(player_pokemon)} VS {get_pokemon_info(enemy_pokemon)}")
         while action.upper() not in ["A", "P", "V", "C"]:
@@ -251,7 +255,7 @@ def fight(player_profile, enemy_pokemon):
             # Si el usuario tiene pokeballs en el inventario, se tira una, hay una probabilidad de capturarlo
             # relativa a la salud restante del pokémon. Cuando se captura pasa a estar en el inventario con la misma
             # salud que tenía.
-            capture_with_pokeball(player_profile, enemy_pokemon)
+            its_captured = capture_with_pokeball(player_profile, enemy_pokemon)
         elif action.upper() == "C":
             player_pokemon = choose_pokemon(player_profile)
 
