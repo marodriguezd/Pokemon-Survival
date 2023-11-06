@@ -1,8 +1,24 @@
 import random
 
 
-def get_pokemon_info(pokemon):
-    return f"{pokemon['name']} | lvl {pokemon['level']} | hp {pokemon['current_health']}/{pokemon['base_health']}"
+def get_pokemon_info(pokemon, enemy=False, *args):
+    if not enemy:
+        return f"{pokemon['name']} | lvl {pokemon['level']} | hp {pokemon['current_health']}/{pokemon['base_health']}"
+    else:
+        max_leveled_pokemon = max_level_for_enemy(args[0])
+        return f"{pokemon['name']} | lvl {max_leveled_pokemon['level']} | hp {pokemon['current_health']}/" \
+               f"{pokemon['base_health']}"
+
+
+def max_level_for_enemy(*args):
+    max = args[0]["pokemon_inventory"][0].copy()
+
+    for _ in range(len(args[0]["pokemon_inventory"])-1):
+        if args[0]["pokemon_inventory"][_+1]["level"] > max["level"]:
+            max = args[0]["pokemon_inventory"][_+1].copy()
+
+    return max
+
 
 
 def choose_pokemon(player_profile):

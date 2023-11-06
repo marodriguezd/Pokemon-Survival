@@ -7,7 +7,7 @@ def enemy_attack(player_pokemon, enemy_pokemon):
     if enemy_pokemon["current_health"] > 0:
         enemy_attacks = pokemon_attacks_in_its_level(enemy_pokemon["attacks"], player_pokemon["level"])
 
-        enemy_attack_selection = enemy_attacks[random.randint(0, len(enemy_attacks) - 1)]
+        enemy_attack_selection = random.choice(enemy_attacks)
 
         enemy_damage_with_type_percentage_applied = int(enemy_attack_selection['damage'].replace("--", "0")) * \
                                                     multiplier_type_calculator(player_pokemon, enemy_pokemon)
@@ -40,6 +40,7 @@ def capture_with_pokeball(player_profile, enemy_pokemon):
             final_probability = base_probability * 9
 
         capture_rate = random.random()
+        player_profile["pokeballs"] -= 1
 
         if capture_rate <= final_probability:
             player_profile["pokemon_inventory"].append(enemy_pokemon)

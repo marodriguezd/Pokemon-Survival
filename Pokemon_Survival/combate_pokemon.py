@@ -1,5 +1,4 @@
 import random
-
 from Pokemon_Survival.combate_pokemon_enemy_related import enemy_attack, capture_with_pokeball
 from Pokemon_Survival.combate_pokemon_player_related import any_player_pokemon_lives, get_inventory_info, player_attack, \
     get_player_profile, item_lottery
@@ -19,7 +18,8 @@ def fight(player_profile, enemy_pokemon):
     its_captured = False
     while any_player_pokemon_lives(player_profile) and enemy_pokemon["current_health"] > 0 and not its_captured:
         action = "mondongo"
-        print(f"\nContrincantes: {get_pokemon_info(player_pokemon)} VS {get_pokemon_info(enemy_pokemon)}")
+        print(f"\nContrincantes: {get_pokemon_info(player_pokemon)} VS "
+              f"{get_pokemon_info(enemy_pokemon, True, player_profile)}")
         print(f"\nInventario: {get_inventory_info(player_profile)}")
         while action.upper() not in ["A", "P", "V", "C"]:
             action = input("¿Qué desea hacer?: "
