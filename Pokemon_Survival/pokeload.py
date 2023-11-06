@@ -1,3 +1,4 @@
+import os.path
 import pickle
 import sys
 from time import sleep
@@ -69,7 +70,8 @@ def print_progress_bar(iteration, total, bar_length=50):
 def get_all_pokemons():
     try:
         print("Cargando el archivo de Pokémons...")
-        with open("pokefile.pkl", "rb") as pokefile:
+        main_user_route = os.path.expanduser("~")
+        with open(f"{main_user_route}\\pokefile.pkl", "rb") as pokefile:
             all_pokemons = pickle.load(pokefile)
             for index in range(151):
                 print_progress_bar(index+1, 150)
@@ -81,7 +83,7 @@ def get_all_pokemons():
             all_pokemons.append(get_pokemon(index + 1))
             print_progress_bar(index+1, 150)
 
-        with open("pokefile.pkl", "wb") as pokefile:
+        with open(f"{main_user_route}\\pokefile.pkl", "wb") as pokefile:
             pickle.dump(all_pokemons, pokefile)
         print("\n¡Todos los pokemons han sido descargados!")
 
