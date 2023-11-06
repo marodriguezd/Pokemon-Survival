@@ -1,0 +1,4 @@
+# Ignorar cosas relacionadas a compilación (PyInstaller)
+/build/
+/dist/
+*.spec
