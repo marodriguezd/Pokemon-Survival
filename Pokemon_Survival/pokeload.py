@@ -68,10 +68,17 @@ def print_progress_bar(iteration, total, bar_length=50):
 
 
 def get_all_pokemons():
+    # Utiliza os.path.expanduser para conseguir la ruta del usuario por defecto
+    main_user_route = os.path.expanduser("~")
+
+    # Utiliza os.makedirs con exist_ok=True para crear la carpeta si no existe
+    os.makedirs(main_user_route + "\\Pokemon Survival", exist_ok=True)
+    game_user_route = main_user_route + "\\Pokemon Survival"
+
     try:
         print("Cargando el archivo de Pokémons...")
-        main_user_route = os.path.expanduser("~")
-        with open(f"{main_user_route}\\pokefile.pkl", "rb") as pokefile:
+
+        with open(f"{game_user_route}\\pokefile.pkl", "rb") as pokefile:
             all_pokemons = pickle.load(pokefile)
             for index in range(151):
                 print_progress_bar(index+1, 150)
@@ -83,7 +90,7 @@ def get_all_pokemons():
             all_pokemons.append(get_pokemon(index + 1))
             print_progress_bar(index+1, 150)
 
-        with open(f"{main_user_route}\\pokefile.pkl", "wb") as pokefile:
+        with open(f"{game_user_route}\\pokefile.pkl", "wb") as pokefile:
             pickle.dump(all_pokemons, pokefile)
         print("\n¡Todos los pokemons han sido descargados!")
 
