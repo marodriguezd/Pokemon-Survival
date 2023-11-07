@@ -61,3 +61,7 @@ def item_lottery(player_profile):
         else:
             player_profile["health_potion"] += 1
             print("¡Has obtenido 1 Poción de Vida!")
+
+
+def add_combat_won(player_profile):
+    player_profile["combats"] += 1

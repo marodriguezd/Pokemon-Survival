@@ -1,7 +1,7 @@
 import random
 from Pokemon_Survival.combate_pokemon_enemy_related import enemy_attack, capture_with_pokeball
 from Pokemon_Survival.combate_pokemon_player_related import any_player_pokemon_lives, get_inventory_info, player_attack, \
-    get_player_profile, item_lottery
+    get_player_profile, item_lottery, add_combat_won
 from Pokemon_Survival.combate_pokemon_pokemon_related import choose_pokemon, get_pokemon_info, cure_pokemon, \
     assign_experience
 from pokeload import get_all_pokemons
@@ -64,6 +64,7 @@ def main():
         enemy_pokemon = random.choice(pokemon_list)
         fight(player_profile, enemy_pokemon)
         item_lottery(player_profile)
+        add_combat_won(player_profile)
 
     print(f"Has perdido en el combate nº{player_profile['combats']}")
 
