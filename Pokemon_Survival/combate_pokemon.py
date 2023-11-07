@@ -1,10 +1,11 @@
 import random
 from Pokemon_Survival.combate_pokemon_enemy_related import enemy_attack, capture_with_pokeball
+from Pokemon_Survival.combate_pokemon_play_related import load_game, delete_play, save_game
 from Pokemon_Survival.combate_pokemon_player_related import any_player_pokemon_lives, get_inventory_info, player_attack, \
     get_player_profile, item_lottery, add_actual_combat
 from Pokemon_Survival.combate_pokemon_pokemon_related import choose_pokemon, get_pokemon_info, cure_pokemon, \
     assign_experience
-from pokeload import get_all_pokemons
+from Pokemon_Survival.pokeload import get_all_pokemons
 
 
 def fight(player_profile, enemy_pokemon):
@@ -56,10 +57,10 @@ def fight(player_profile, enemy_pokemon):
     input("\nPresiona ENTER para continuar...")
 
 
-def YesOrNo():
+def YesOrNo(text_to_show):
     while True:
         try:
-            player_wants = input("¿Desea volverlo a intentar? [S/N]: ")
+            player_wants = input(text_to_show)
             if player_wants.upper() not in ["S", "N"]:
                 raise ValueError
             elif player_wants.upper() == "S":
@@ -71,21 +72,45 @@ def YesOrNo():
 
 
 def main():
+    isResumed = False
+    isGameEnded = False
+    if YesOrNo("¿Desea cargar partida? [S/N]: "):
+        isResumed = True
+        data = load_game()
+        delete_play()
+
     while True:
-        pokemon_list = get_all_pokemons()
-        player_profile = get_player_profile(pokemon_list)
+        if isResumed and data:
+            pokemon_list = data[0]
+            player_profile = data[1]
+        else:
+            pokemon_list = get_all_pokemons()
+            player_profile = get_player_profile(pokemon_list)
 
         while any_player_pokemon_lives(player_profile):
-            enemy_pokemon = random.choice(pokemon_list)
+            if isResumed and data:
+                enemy_pokemon = data[2]
+            else:
+                enemy_pokemon = random.choice(pokemon_list)
+
             fight(player_profile, enemy_pokemon)
             if any_player_pokemon_lives(player_profile):
                 item_lottery(player_profile)
             add_actual_combat(player_profile)
 
+            isResumed = False
+
+            if not YesOrNo("¿Desea seguir o guardar y salir? [S/N]: "):
+                sorted_data = [pokemon_list, player_profile, enemy_pokemon]
+                save_game(sorted_data)
+                isGameEnded = True
+                break
+
         print(f"Has perdido en el combate nº{player_profile['combats']}")
 
-        if not YesOrNo():
-            break
+        if not isGameEnded:
+            if not YesOrNo("¿Desea volverlo a intentar? [S/N]: "):
+                break
 
 
 if __name__ == "__main__":
