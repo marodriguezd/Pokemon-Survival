@@ -13,12 +13,11 @@ def get_pokemon_info(pokemon, enemy=False, *args):
 def max_level_for_enemy(*args):
     max = args[0]["pokemon_inventory"][0].copy()
 
-    for _ in range(len(args[0]["pokemon_inventory"])-1):
-        if args[0]["pokemon_inventory"][_+1]["level"] > max["level"]:
-            max = args[0]["pokemon_inventory"][_+1].copy()
+    for _ in range(len(args[0]["pokemon_inventory"]) - 1):
+        if args[0]["pokemon_inventory"][_ + 1]["level"] > max["level"]:
+            max = args[0]["pokemon_inventory"][_ + 1].copy()
 
     return max
-
 
 
 def choose_pokemon(player_profile):
@@ -27,7 +26,11 @@ def choose_pokemon(player_profile):
         for index in range(len(player_profile["pokemon_inventory"])):
             print(f"{index} - {get_pokemon_info(player_profile['pokemon_inventory'][index])}")
         try:
-            return player_profile["pokemon_inventory"][int(input("¿Cuál eliges?: "))]
+            pokemon_selected = player_profile["pokemon_inventory"][int(input("¿Cuál eliges?: "))]
+            if pokemon_selected["current_health"] > 0:
+                return pokemon_selected
+            else:
+                print("Por favor escoja un pokémon vivo.")
         except (ValueError, IndexError):
             print("Opción inválida")
 

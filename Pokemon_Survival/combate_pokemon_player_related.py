@@ -12,10 +12,11 @@ def get_player_profile(pokemon_list):
         if random_pokemon not in pokemon_inventory:
             pokemon_inventory.append(random_pokemon)
 
+    # Damos por hecho que mínimo hará el primer combate. Aunque muera vale.
     return {
         "player_name": input("¿Cuál es tu nombre?: "),
         "pokemon_inventory": pokemon_inventory,
-        "combats": 0,
+        "combats": 1,
         "pokeballs": 0,
         "health_potion": 0
     }

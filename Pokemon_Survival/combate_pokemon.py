@@ -56,18 +56,36 @@ def fight(player_profile, enemy_pokemon):
     input("\nPresiona ENTER para continuar...")
 
 
+def YesOrNo():
+    while True:
+        try:
+            player_wants = input("¿Desea volverlo a intentar? [S/N]: ")
+            if player_wants.upper() not in ["S", "N"]:
+                raise ValueError
+            elif player_wants.upper() == "S":
+                return True
+            else:
+                return False
+        except ValueError:
+            print("Opción inválida, responda con Ss o Nn.")
+
+
 def main():
-    pokemon_list = get_all_pokemons()
-    player_profile = get_player_profile(pokemon_list)
+    while True:
+        pokemon_list = get_all_pokemons()
+        player_profile = get_player_profile(pokemon_list)
 
-    while any_player_pokemon_lives(player_profile):
-        enemy_pokemon = random.choice(pokemon_list)
-        fight(player_profile, enemy_pokemon)
-        if any_player_pokemon_lives(player_profile):
-            item_lottery(player_profile)
-        add_actual_combat(player_profile)
+        while any_player_pokemon_lives(player_profile):
+            enemy_pokemon = random.choice(pokemon_list)
+            fight(player_profile, enemy_pokemon)
+            if any_player_pokemon_lives(player_profile):
+                item_lottery(player_profile)
+            add_actual_combat(player_profile)
 
-    print(f"Has perdido en el combate nº{player_profile['combats']}")
+        print(f"Has perdido en el combate nº{player_profile['combats']}")
+
+        if not YesOrNo():
+            break
 
 
 if __name__ == "__main__":
