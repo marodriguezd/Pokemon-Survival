@@ -1,7 +1,55 @@
+import os
 import random
-
 from Pokemon_Survival.combate_pokemon_enemy_related import multiplier_type_calculator
 from Pokemon_Survival.combate_pokemon_pokemon_related import pokemon_attacks_in_its_level
+
+
+def YesOrNo(text_to_show):
+    while True:
+        try:
+            player_wants = input(text_to_show)
+            if player_wants.upper() not in ["S", "N"]:
+                raise ValueError
+            elif player_wants.upper() == "S":
+                return True
+            else:
+                return False
+        except ValueError:
+            print("Opción inválida, responda con Ss o Nn.")
+
+
+def if_player_wants_to_change_it_name(actual_name):
+    if YesOrNo("¿Desea cambiar el nombre? [S/N]: "):
+        new_user_name = input("¿Cuál es tu nombre?: ")
+    else:
+        return actual_name
+
+    return new_user_name
+
+
+def set_or_get_player_name():
+    # Utiliza os.path.expanduser para conseguir la ruta del usuario por defecto
+    main_user_route = os.path.expanduser("~")
+
+    # Utiliza os.makedirs con exist_ok=True para crear la carpeta si no existe
+    os.makedirs(main_user_route + "\\Pokemon Survival", exist_ok=True)
+    game_user_route = main_user_route + "\\Pokemon Survival"
+
+    try:
+        with open(f"{game_user_route}\\username.txt", "r") as name_in_game:
+            user_name = name_in_game.read().split("\n")[0]
+            print(f"Bienvenid@ de vuelta {user_name}")
+            new_user_name = if_player_wants_to_change_it_name(user_name)
+            if user_name != new_user_name:
+                with open(f"{game_user_route}\\username.txt", "w") as actual_name:
+                    actual_name.write(new_user_name + "\n")
+                    user_name = new_user_name
+    except FileNotFoundError:
+        with open(f"{game_user_route}\\username.txt", "w") as name_in_game:
+            user_name = input("¿Cuál es tu nombre?: ")
+            name_in_game.write(user_name + "\n")
+
+    return user_name
 
 
 def get_player_profile(pokemon_list):
@@ -12,9 +60,11 @@ def get_player_profile(pokemon_list):
         if random_pokemon not in pokemon_inventory:
             pokemon_inventory.append(random_pokemon)
 
+    user_name = set_or_get_player_name()
+
     # Damos por hecho que mínimo hará el primer combate. Aunque muera vale.
     return {
-        "player_name": input("¿Cuál es tu nombre?: "),
+        "player_name": user_name,
         "pokemon_inventory": pokemon_inventory,
         "combats": 1,
         "pokeballs": 0,

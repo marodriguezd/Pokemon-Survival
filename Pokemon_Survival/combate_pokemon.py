@@ -44,6 +44,7 @@ def fight(player_profile, enemy_pokemon):
             its_captured = capture_with_pokeball(player_profile, enemy_pokemon)
         elif action.upper() == "C":
             player_pokemon = choose_pokemon(player_profile)
+            enemy_attack(player_pokemon, enemy_pokemon)  # Para que al cambiar de pokémon se efectúe el ataque enemigo.
 
         if player_pokemon["current_health"] <= 0 and any_player_pokemon_lives(player_profile):
             player_pokemon["current_health"] = 0  # Para que la salud del Pokémon muerto sea 0 sí o sí
