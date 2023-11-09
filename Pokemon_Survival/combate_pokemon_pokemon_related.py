@@ -41,6 +41,8 @@ def pokemon_attacks_in_its_level(attacks, actual_level):
     for item in attacks:
         if item["min_level"] <= actual_level:
             posible_attacks_in_that_level.append(item)
+        else:
+            break
 
     while True:
         if len(posible_attacks_in_that_level) > 4:

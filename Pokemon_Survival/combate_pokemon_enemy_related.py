@@ -16,7 +16,7 @@ def enemy_attack(player_pokemon, enemy_pokemon):
 
 
 def capture_with_pokeball(player_profile, enemy_pokemon):
-    if player_profile["pokeballs"] > 0:
+    if player_profile["pokeballs"] > 0 and player_profile["pokemon_inventory"] < 6:
         base_probability = 0.10
         final_probability = 0
 
@@ -49,6 +49,8 @@ def capture_with_pokeball(player_profile, enemy_pokemon):
         else:
             print("¡La captura falló!")
             return False
+    elif player_profile["pokemon_inventory"] < 6:
+        print("¡Ya tienes la máxima cantidad de Pokémons en el inventario!")
     else:
         print(f"¡No tienes Pokeballs para capturar a {enemy_pokemon['name']}!")
         return False

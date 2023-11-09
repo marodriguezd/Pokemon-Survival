@@ -114,6 +114,5 @@ def item_lottery(player_profile):
             print("¡Has obtenido 1 Poción de Vida!")
 
 
-
 def add_actual_combat(player_profile):
     player_profile["combats"] += 1
