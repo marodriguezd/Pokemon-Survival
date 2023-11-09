@@ -62,11 +62,10 @@ def get_player_profile(pokemon_list):
 
     user_name = set_or_get_player_name()
 
-    # Damos por hecho que mínimo hará el primer combate. Aunque muera vale.
     return {
         "player_name": user_name,
         "pokemon_inventory": pokemon_inventory,
-        "combats": 1,
+        "combats": 0,
         "pokeballs": 0,
         "health_potion": 0
     }

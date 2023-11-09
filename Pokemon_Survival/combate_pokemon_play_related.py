@@ -37,6 +37,7 @@ def load_game():
             for index in range(151):
                 print_progress_bar(index+1, 150)
                 sleep(0.04)
+            print()
             return pickle.load(pkgame)
     except FileNotFoundError:
         print("No existe un archivo de guardado previo.\n")
