@@ -47,7 +47,10 @@ def fight(player_profile, enemy_pokemon):
             enemy_attack(player_pokemon, enemy_pokemon)  # Para que al cambiar de pokémon se efectúe el ataque enemigo.
 
         if player_pokemon["current_health"] <= 0 and any_player_pokemon_lives(player_profile):
-            player_pokemon["current_health"] = 0  # Para que la salud del Pokémon muerto sea 0 sí o sí
+            for pokemon in player_profile["pokemon_inventory"]:
+                if pokemon["name"] == player_pokemon["name"]:
+                    pokemon["current_health"] = 0  # Para que la salud del Pokémon muerto sea 0 sí o sí
+                    break
             player_pokemon = choose_pokemon(player_profile)
 
     if player_pokemon["current_health"] > 0:
@@ -84,6 +87,7 @@ def main():
         if isResumed and data:
             pokemon_list = data[0]
             player_profile = data[1]
+            data = None
         else:
             pokemon_list = get_all_pokemons()
             player_profile = get_player_profile(pokemon_list)
@@ -101,7 +105,7 @@ def main():
 
             isResumed = False
 
-            if not YesOrNo("¿Desea seguir o guardar y salir? [S/N]: "):
+            if not YesOrNo("¿Desea seguir o guardar y salir? [S/N]: ") and not any_player_pokemon_lives(player_profile):
                 sorted_data = [pokemon_list, player_profile, enemy_pokemon]
                 save_game(sorted_data)
                 isGameEnded = True
