@@ -8,20 +8,50 @@ from Pokemon_Survival.combate_pokemon_pokemon_related import choose_pokemon, get
 from Pokemon_Survival.pokeload import get_all_pokemons
 
 
+def print_actual_battle_and_stats(player_pokemon, enemy_pokemon, player_profile):
+    print(f"\nContrincantes: {get_pokemon_info(player_pokemon)} VS "
+          f"{get_pokemon_info(enemy_pokemon, True, player_profile)}")
+    print(f"\nInventario: {get_inventory_info(player_profile)}")
+
+
+def user_action_in_game(action, player_pokemon, enemy_pokemon, attack_history, player_profile):
+    enemy_can_attack = True
+
+    if action.upper() == "A":
+        player_attack(player_pokemon, enemy_pokemon)
+        attack_history.append(player_pokemon)
+    elif action.upper() == "V":
+        cure_pokemon(player_profile, player_pokemon)
+    elif action.upper() == "P":
+        its_captured = capture_with_pokeball(player_profile, enemy_pokemon)
+        if its_captured:
+            enemy_can_attack = False
+    elif action.upper() == "C":
+        player_pokemon = choose_pokemon(player_profile)
+
+    return [enemy_can_attack, player_pokemon]
+
+
+def player_pokemon_is_dead(player_profile, player_pokemon):
+    for pokemon in player_profile["pokemon_inventory"]:
+        if pokemon["current_health"] < 0:
+            pokemon["current_health"] = 0  # Para que la salud del Pokémon muerto sea 0 sí o sí
+
+    print(f"\n¡Han matado a {player_pokemon['name']}!")
+
+
 def fight(player_profile, enemy_pokemon):
     print("\n--- NUEVO COMBATE ---")
 
     attack_history = []
     print(f"Vas a luchar contra: {enemy_pokemon['name']}")
     player_pokemon = choose_pokemon(player_profile)
-    # print(f"\nContrincantes: {get_pokemon_info(player_pokemon)} VS {get_pokemon_info(enemy_pokemon)}")
 
     its_captured = False
     while any_player_pokemon_lives(player_profile) and enemy_pokemon["current_health"] > 0 and not its_captured:
-        action = "mondongo"
-        print(f"\nContrincantes: {get_pokemon_info(player_pokemon)} VS "
-              f"{get_pokemon_info(enemy_pokemon, True, player_profile)}")
-        print(f"\nInventario: {get_inventory_info(player_profile)}")
+        print_actual_battle_and_stats(player_pokemon, enemy_pokemon, player_profile)
+
+        action = ""  # Para poder empezar
         while action.upper() not in ["A", "P", "V", "C"]:
             action = input("¿Qué desea hacer?: "
                            "[A]tacar, "
@@ -29,32 +59,14 @@ def fight(player_profile, enemy_pokemon):
                            "Poción de [V]ida, "
                            "[C]ambiar: ")
 
-        if action.upper() == "A":
-            player_attack(player_pokemon, enemy_pokemon)
-            attack_history.append(player_pokemon)
+        reaction_to_user_actions = user_action_in_game(action, player_pokemon, enemy_pokemon, attack_history, player_profile)
+        if reaction_to_user_actions[1] != player_pokemon:
+            player_pokemon = reaction_to_user_actions[1]
+        if reaction_to_user_actions[0]:
             enemy_attack(player_pokemon, enemy_pokemon)
-        elif action.upper() == "V":
-            # Si el usuario tiene curas en el inventario, se aplica, cura 50 de vida hasta llegar a 100
-            # Si el usuario no tiene, no se cura
-            cure_pokemon(player_profile, player_pokemon)
-            enemy_attack(player_pokemon, enemy_pokemon)  # Para que al curar un pokémon se efectúe el ataque enemigo.
-        elif action.upper() == "P":
-            # Si el usuario tiene pokeballs en el inventario, se tira una, hay una probabilidad de capturarlo
-            # relativa a la salud restante del pokémon. Cuando se captura pasa a estar en el inventario con la misma
-            # salud que tenía.
-            its_captured = capture_with_pokeball(player_profile, enemy_pokemon)
-            if not its_captured:
-                enemy_attack(player_pokemon,
-                             enemy_pokemon)  # Para que al fallar captura se efectúe el ataque enemigo.
-        elif action.upper() == "C":
-            player_pokemon = choose_pokemon(player_profile)
-            enemy_attack(player_pokemon, enemy_pokemon)  # Para que al cambiar de pokémon se efectúe el ataque enemigo.
 
         if player_pokemon["current_health"] <= 0 and any_player_pokemon_lives(player_profile):
-            for pokemon in player_profile["pokemon_inventory"]:
-                if pokemon["name"] == player_pokemon["name"]:
-                    pokemon["current_health"] = 0  # Para que la salud del Pokémon muerto sea 0 sí o sí
-                    break
+            player_pokemon_is_dead(player_profile, player_pokemon)
             player_pokemon = choose_pokemon(player_profile)
 
     if player_pokemon["current_health"] > 0:
@@ -79,23 +91,24 @@ def YesOrNo(text_to_show):
             print("Opción inválida, responda con Ss o Nn.")
 
 
+def game_loader(pokemon_list):
+    if YesOrNo("\n¿Desea cargar partida? [S/N]: "):
+        data = load_game()
+        if data is not None:
+            delete_play()
+            return data
+
+    return get_player_profile(pokemon_list)
+
+
 def main():
     isGameEnded = False
-    if YesOrNo("¿Desea cargar partida? [S/N]: "):
-        data = load_game()
-        delete_play()
-    else:
-        data = None
+    pokemon_list = get_all_pokemons()
+    player_profile = game_loader(pokemon_list)
 
     while not isGameEnded:
-        if data:  # Carga de guardado
-            pokemon_list = data[0]
-            player_profile = data[1]
-            data = None
-        else:  # Partida nueva
-            pokemon_list = get_all_pokemons()
-            player_profile = get_player_profile(pokemon_list)
 
+        # Main game loop
         while any_player_pokemon_lives(player_profile) and not isGameEnded:
             enemy_pokemon = random.choice(pokemon_list)
 
@@ -104,16 +117,17 @@ def main():
                 item_lottery(player_profile)
             add_actual_combat(player_profile)
 
-            if not any_player_pokemon_lives(player_profile) or not YesOrNo("¿Desea seguir o guardar y salir? [S/N]: "):
-                sorted_data = [pokemon_list, player_profile, enemy_pokemon]
-                save_game(sorted_data)
+            if any_player_pokemon_lives(player_profile) and not YesOrNo("¿Desea seguir o guardar y salir? [S/N]: "):
                 isGameEnded = True
+                save_game(player_profile)
 
         print(f"\nHas terminado en el combate nº{player_profile['combats']}")
 
         if not isGameEnded:
             if not YesOrNo("¿Desea volverlo a intentar? [S/N]: "):
                 break
+
+        input("\nPresiona ENTER para continuar...")
 
 
 if __name__ == "__main__":
