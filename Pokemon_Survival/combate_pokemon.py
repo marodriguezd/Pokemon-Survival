@@ -64,6 +64,8 @@ def fight(player_profile, enemy_pokemon):
             player_pokemon = reaction_to_user_actions[1]
         if reaction_to_user_actions[0]:
             enemy_attack(player_pokemon, enemy_pokemon)
+        else:
+            break  # Para salir si ha sido capturado ya que es la única vez que no ataca
 
         if player_pokemon["current_health"] <= 0 and any_player_pokemon_lives(player_profile):
             player_pokemon_is_dead(player_profile, player_pokemon)
