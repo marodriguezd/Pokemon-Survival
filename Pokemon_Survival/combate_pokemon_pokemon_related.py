@@ -30,7 +30,7 @@ def choose_pokemon(player_profile):
             if pokemon_selected["current_health"] > 0:
                 return pokemon_selected
             else:
-                print("Por favor escoja un pokémon vivo.")
+                print("\nPor favor escoja un pokémon vivo.")
         except (ValueError, IndexError):
             print("Opción inválida")
 
@@ -55,14 +55,15 @@ def pokemon_attacks_in_its_level(attacks, actual_level):
 
 def assign_experience(attack_history):
     for pokemon in attack_history:
-        points = random.randint(1, 5)
-        pokemon["current_exp"] += points
+        if pokemon["current_health"] > 0:
+            points = random.randint(1, 5)
+            pokemon["current_exp"] += points
 
-        while pokemon["current_exp"] > 20:
-            pokemon["current_exp"] -= 20
-            pokemon["level"] += 1
-            pokemon["current_health"] = pokemon["base_health"]
-            print(f"Tu pokemon ha subido al nivel {get_pokemon_info(pokemon)}")
+            while pokemon["current_exp"] > 20:
+                pokemon["current_exp"] -= 20
+                pokemon["level"] += 1
+                pokemon["current_health"] = pokemon["base_health"]
+                print(f"Tu pokemon ha subido al nivel {get_pokemon_info(pokemon)}")
 
 
 def cure_pokemon(player_profile, player_pokemon):
