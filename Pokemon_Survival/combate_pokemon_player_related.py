@@ -19,8 +19,8 @@ def YesOrNo(text_to_show):
 
 
 def if_player_wants_to_change_it_name(actual_name):
-    if YesOrNo("¿Desea cambiar el nombre? [S/N]: "):
-        new_user_name = input("¿Cuál es tu nombre?: ")
+    if YesOrNo("¿Desea cambiar su nombre? [S/N]: "):
+        new_user_name = input("¿Cuál será su nuevo nombre?: ")
     else:
         return actual_name
 
@@ -38,7 +38,7 @@ def set_or_get_player_name():
     try:
         with open(f"{game_user_route}\\username.txt", "r") as name_in_game:
             user_name = name_in_game.read().split("\n")[0]
-            print(f"Bienvenid@ de vuelta {user_name}")
+            print(f"\nBienvenid@ de vuelta {user_name}")
             new_user_name = if_player_wants_to_change_it_name(user_name)
             if user_name != new_user_name:
                 with open(f"{game_user_route}\\username.txt", "w") as actual_name:
@@ -46,7 +46,7 @@ def set_or_get_player_name():
                     user_name = new_user_name
     except FileNotFoundError:
         with open(f"{game_user_route}\\username.txt", "w") as name_in_game:
-            user_name = input("¿Cuál es tu nombre?: ")
+            user_name = input("¿Cuál es su nombre?: ")
             name_in_game.write(user_name + "\n")
 
     return user_name
@@ -101,7 +101,7 @@ def player_attack(player_pokemon, enemy_pokemon):
 
 def item_lottery(player_profile):
     """Según un factor aleatorio, al jugador le puede tocar una pokeball o una cura"""
-    PROBABILITY = 0.25  # 25% de probabilidad
+    PROBABILITY = 0.33  # 33% de probabilidad
     lottery = random.random()  # Random entre 0 y 1
 
     if lottery <= PROBABILITY:

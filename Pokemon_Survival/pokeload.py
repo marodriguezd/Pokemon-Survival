@@ -76,13 +76,13 @@ def get_all_pokemons():
     game_user_route = main_user_route + "\\Pokemon Survival"
 
     try:
-        print("Cargando el archivo de Pokémons...")
+        # print("Cargando el archivo de Pokémons...")
 
         with open(f"{game_user_route}\\pokefile.pkl", "rb") as pokefile:
             all_pokemons = pickle.load(pokefile)
-            for index in range(151):
-                print_progress_bar(index+1, 150)
-                sleep(0.04)
+            # for index in range(151):
+            #     print_progress_bar(index+1, 150)
+            #     sleep(0.04)
     except FileNotFoundError:
         print("¡Archivo no encontrado! Cargando de internet...")
         all_pokemons = []
@@ -94,5 +94,5 @@ def get_all_pokemons():
             pickle.dump(all_pokemons, pokefile)
         print("\n¡Todos los pokemons han sido descargados!")
 
-    print("\n¡Lista de Pokémons cargada!\n")
+        print("\n¡Lista de Pokémons cargada!\n")
     return all_pokemons

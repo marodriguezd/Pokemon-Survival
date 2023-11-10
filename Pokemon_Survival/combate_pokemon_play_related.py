@@ -40,7 +40,7 @@ def load_game():
             print()
             return pickle.load(pkgame)
     except FileNotFoundError:
-        print("No existe un archivo de guardado previo.\n")
+        print("No existe un archivo de guardado previo.")
         return None
 
 
