@@ -74,6 +74,8 @@ def fight(player_profile, enemy_pokemon):
     if player_pokemon["current_health"] > 0:
         print("¡Has ganado!")
         assign_experience(attack_history)
+    elif not any_player_pokemon_lives(player_profile):
+        print("\n¡Han matado a todos tus pokémons!\n")
 
     print("--- FIN DEL COMBATE ---")
     input("\nPresiona ENTER para continuar...")
