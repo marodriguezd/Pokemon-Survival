@@ -49,7 +49,7 @@ def capture_with_pokeball(player_profile, enemy_pokemon):
         else:
             print("¡La captura falló!")
             return False
-    elif len(player_profile["pokemon_inventory"]) < 6:
+    elif len(player_profile["pokemon_inventory"]) >= 6:
         print("¡Ya tienes la máxima cantidad de Pokémons en el inventario!")
     else:
         print(f"¡No tienes Pokeballs para capturar a {enemy_pokemon['name']}!")
